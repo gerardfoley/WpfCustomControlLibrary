@@ -1,0 +1,247 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:WpfCustomControlLibrary">
+
+    <local:ThicknesConverter x:Key="ZeroTopThicknesConverter" Top="0" />
+
+    <local:CornerRadiusConverter x:Key="TopPanelCornerRadiusConverter" BottomLeft="0" BottomRight="0" />
+    <local:CornerRadiusConverter x:Key="BottomPanelCornerRadiusConverter" TopLeft="0" TopRight="0" />
+
+    <Style TargetType="{x:Type local:ContentDialog}">
+
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="CloseButtonText" Value="OK" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="Background" Value="White" />
+        <Setter Property="BorderBrush" Value="#ccc" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="ButtonPanelBrush" Value="#eee" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:ContentDialog}">
+
+                    <ContentControl x:Name="Root" Visibility="Collapsed">
+
+                        <VisualStateManager.VisualStateGroups>
+
+                            <VisualStateGroup Name="CommonStates">
+
+                                <VisualStateGroup.Transitions>
+
+                                    <VisualTransition GeneratedDuration="0:0:0.2" />
+
+                                </VisualStateGroup.Transitions>
+
+                                <VisualState Name="Show">
+
+                                    <Storyboard>
+
+                                        <DoubleAnimation
+                                            To="1" 
+                                            Storyboard.TargetName="DialogBorder"
+                                            Storyboard.TargetProperty="Opacity" />
+
+                                        <DoubleAnimation
+                                            To="1"
+                                            Storyboard.TargetName="Overlay"
+                                            Storyboard.TargetProperty="Opacity" />
+
+                                    </Storyboard>
+
+                                </VisualState>
+
+                                <VisualState Name="Hide" />
+
+                            </VisualStateGroup>
+
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Grid x:Name="RootGrid">
+
+                            <ContentControl
+                                x:Name="BackgroundContentControl"
+                                Content="{TemplateBinding BackgroundContent}"
+                                Focusable="False"
+                                KeyboardNavigation.TabNavigation="None"
+                                KeyboardNavigation.DirectionalNavigation="None"
+                                KeyboardNavigation.ControlTabNavigation="None"
+                                KeyboardNavigation.IsTabStop="False"
+                                IsHitTestVisible="False">
+                                <ContentControl.Effect>
+                                    <BlurEffect />
+                                </ContentControl.Effect>
+                            </ContentControl>
+
+                            <Button 
+                                x:Name="Overlay"
+                                Focusable="False"
+                                Opacity="0">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Rectangle Fill="#77000000" />
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+
+                            <Border
+                                x:Name="DialogBorder"
+                                Opacity="0"
+                                FocusVisualStyle="{x:Null}"
+                                Focusable="True"
+                                KeyboardNavigation.IsTabStop="False"
+                                FocusManager.IsFocusScope="True"
+                                Margin="{TemplateBinding Margin}"
+                                UseLayoutRounding="{TemplateBinding UseLayoutRounding}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalAlignment}">
+
+                                <Border.Effect>
+                                    <DropShadowEffect 
+                                        Color="#000000"
+                                        Opacity="0.5"
+                                        BlurRadius="100" 
+                                        ShadowDepth="0" />
+                                </Border.Effect>
+
+                                <Grid>
+
+                                    <Grid.RowDefinitions>
+
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+
+                                    </Grid.RowDefinitions>
+
+                                    <Border
+                                        x:Name="ContentBorder"
+                                        CornerRadius="{TemplateBinding CornerRadius, Converter={StaticResource TopPanelCornerRadiusConverter}}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        Background="{TemplateBinding Background}">
+
+                                        <StackPanel Margin="20">
+
+                                            <ContentPresenter 
+                                                x:Name="TitleContentPresenter"
+                                                ContentSource="Title"
+                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                Margin="0,0,0,10"
+                                                TextBlock.Foreground="{TemplateBinding Foreground}"
+                                                TextBlock.FontWeight="Medium"
+                                                TextBlock.FontSize="18">
+                                                <ContentPresenter.Resources>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="TextWrapping" Value="Wrap" />
+                                                    </Style>
+                                                </ContentPresenter.Resources>
+                                            </ContentPresenter>
+
+                                            <ContentPresenter 
+                                                TextBlock.Foreground="{TemplateBinding Foreground}"
+                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}">
+                                                <ContentPresenter.Resources>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="TextWrapping" Value="Wrap" />
+                                                    </Style>
+                                                </ContentPresenter.Resources>
+                                            </ContentPresenter>
+
+                                        </StackPanel>
+
+                                    </Border>
+
+                                    <Border
+                                        x:Name="ButtonsContainer"
+                                        CornerRadius="{TemplateBinding CornerRadius, Converter={StaticResource BottomPanelCornerRadiusConverter}}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness, Converter={StaticResource ZeroTopThicknesConverter}}"
+                                        Background="{TemplateBinding ButtonPanelBrush}"
+                                        Grid.Row="1">
+
+                                        <UniformGrid Rows="1" Margin="10">
+                                            
+                                            <Button 
+                                                x:Name="PrimaryButton" 
+                                                Margin="10"
+                                                IsDefault="True"
+                                                IsEnabled="{TemplateBinding IsPrimaryButtonEnabled}"
+                                                Command="{TemplateBinding PrimaryButtonCommand}"
+                                                CommandParameter="{TemplateBinding PrimaryButtonCommandParameter}"
+                                                Style="{TemplateBinding PrimaryButtonStyle}"
+                                                Content="{TemplateBinding PrimaryButtonText}"/>
+                                            
+                                            <Button 
+                                                x:Name="CloseButton"
+                                                Margin="10"
+                                                IsCancel="True"
+                                                Command="{TemplateBinding CloseButtonCommand}"
+                                                CommandParameter="{TemplateBinding CloseButtonCommandParameter}"
+                                                Style="{TemplateBinding CloseButtonStyle}"
+                                                Content="{TemplateBinding CloseButtonText}"/>
+                                            
+                                        </UniformGrid>
+
+                                    </Border>
+
+                                </Grid>
+
+                            </Border>
+
+                        </Grid>
+
+                    </ContentControl>
+
+                    <ControlTemplate.Triggers>
+
+                        <Trigger Property="PrimaryButtonText" Value="">
+                            <Setter TargetName="PrimaryButton" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+
+                        <Trigger Property="CloseButtonText" Value="">
+                            <Setter TargetName="CloseButton" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+
+                        <Trigger Property="Title" Value="">
+                            <Setter TargetName="TitleContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+
+                        <Trigger Property="Title" Value="{x:Null}">
+                            <Setter TargetName="TitleContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+
+                        <MultiTrigger>
+
+                            <MultiTrigger.Conditions>
+
+                                <Condition Property="PrimaryButtonText" Value="" />
+                                <Condition Property="CloseButtonText" Value="" />
+
+                            </MultiTrigger.Conditions>
+
+                            <MultiTrigger.Setters>
+
+                                <Setter TargetName="ButtonsContainer" Property="Visibility" Value="Collapsed" />
+                                <Setter 
+                                    TargetName="ContentBorder" 
+                                    Property="CornerRadius"
+                                    Value="{Binding CornerRadius, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+
+                            </MultiTrigger.Setters>
+
+                        </MultiTrigger>
+
+                    </ControlTemplate.Triggers>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
